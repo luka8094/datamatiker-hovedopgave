@@ -3,8 +3,14 @@ import "dotenv/config"
 const app = express()
 const {PORT} = process.env
 
-app.get("/", (req, res) => {
-    res.send("Endpoint connection test status: OK")
+app.use(express.json())
+
+app.get("/", (req, res) =>{
+    res.redirect("/main")
+})
+
+app.get("/test", (req, res) => { 
+    res.send({data:"Endpoint connection test status: OK"})
 })
 
 import { handler } from "../frontend/obsidian-foresight/build/handler.js"
