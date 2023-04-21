@@ -5,18 +5,24 @@ const {PORT} = process.env
 
 //AWS cloud connection test
 import AWS from "aws-sdk"
-const {AWS_A, AWS_K} = process.env
+const {
+    AWS_A, 
+    AWS_K, 
+    AWS_BUCKET, 
+    AWS_REGION
+} = process.env
+
 AWS.config.update({
     accessKeyId: AWS_A,
     secretAccessKey: AWS_K
 })
 
-const s3 = new AWS.S3({region: 'eu-north-1'})
+const s3 = new AWS.S3({region: AWS_REGION})
 
 ;(async() => {
     await s3.putObject({
         Body: "this is a test",
-        Bucket: "obsidian-mindbench-test-bucket",
+        Bucket: AWS_BUCKET,
         Key: "file-upload-test.txt"
     }).promise()
 })()
