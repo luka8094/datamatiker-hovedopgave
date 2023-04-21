@@ -1,24 +1,33 @@
-### Datamatiker projekt - hovedopgave 2023
-KEA Datamatiker afhandlingsprojekt
+### Datamatiker hovedopgave 2023
+KEA afhandlingsprojekt
 
 Forfatter : luka8094
 
 ### Beskrivelse
 
-Titel : Mindbench
+Applikationstitel : Mindbench
 
-Moduler :
+Backend moduler :
 
--
--
--
--
--
+- Express
+- Helmet
+- AWS-sdk
+- Multer
+- nexe
+
+Frontend framework :
+- Svelte
+
+Test suite :
+- Chai
+- Mocha
 
 ## Beskrivelse
 
-Forudsigelses WebApp 
+BI Webapp værktøj til forudsigelse af nøgletal i datasæt og generering af ML modeller. Udviklet i samarbejde med en virksomhed.
 
-### Instrukser
+### Kørselsvejledning
 
-Kørselsvejledning...
+Instruktioner til kørsel af applikation :
+
+``` commands og cli her ``
