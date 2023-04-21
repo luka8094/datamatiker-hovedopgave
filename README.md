@@ -30,4 +30,4 @@ BI Webapp værktøj til forudsigelse af nøgletal i datasæt og generering af ML
 
 Instruktioner til kørsel af applikation :
 
-``` commands og cli her ``
+``` commands og cli her ```
