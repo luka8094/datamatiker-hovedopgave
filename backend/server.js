@@ -3,6 +3,14 @@ import "dotenv/config"
 const app = express()
 const {PORT} = process.env
 
+/* AWS cloud connection test
+import * as AWS from "aws-sdk"
+let s3 = new AWS.S3()
+*/
+
+import path from "path"
+app.use(express.static(path.resolve("../frontend/obsididen-foresight/dist")))
+
 app.use(express.json())
 
 app.get("/", (req, res) =>{

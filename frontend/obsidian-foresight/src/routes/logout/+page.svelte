@@ -1,34 +1,23 @@
 <script>
-    import {browser} from "$app/environment"
-    import {goto} from "$app/navigation"
-    import {onMount} from "svelte"
+    import {browser} from "$app/environment";
+    import {goto} from "$app/navigation";
     import {authorized} from "../../stores/mainsys"
     /*import {useNavigate} from "svelte-navigator"
 
     const navigate = useNavigate()
     */
 
-   function login(){
-        $authorized = true
+   function logout(){
+        $authorized = null
 
-        if(browser && $authorized){
-            goto("/userpage")
-        }
+        goto("/") 
     }
-
-    onMount(()=>{
-        if(browser && $authorized){
-            goto("/userpage")
-        }
-    })
 </script>
 
 
-<section on:submit={login}>
+<section on:submit={logout}>
     <form>
-        <h1>Please login</h1>
-        <input type="text" id="username" placeholder="username"/>
-        <input type="password" id="password" placeholder="password"/>
+        <h1>logout</h1>
         <input type="submit">
     </form>
 </section>

@@ -36,5 +36,8 @@
 	},
 	"svelte": "./dist/index.js",
 	"types": "./dist/index.d.ts",
-	"type": "module"
+	"type": "module",
+	"dependencies": {
+		"svelte-navigator": "^3.2.2"
+	}
 }
