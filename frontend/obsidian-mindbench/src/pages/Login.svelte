@@ -1,11 +1,29 @@
+<script>
+    import {useNavigate} from "svelte-navigator"
+    import {authorized} from "../stores/sysdriver"
+    let username, password
+
+    const navigate = useNavigate()
+
+    function login(){
+        if(username.value === "testuser" && password.value === "password"){ 
+            console.log("login credentials accepted!")
+            $authorized = true
+            navigate("/dashboard")
+        }
+        else console.log("access denied!")
+    }
+</script>
+
 <section>
-    <form>
+    <form on:submit={login}>
         <fieldset>
             Login
             <label for="">Username:</label>
-            <input type="text" name="username" placeholder="username">
+            <input bind:this={username} type="text" name="username" placeholder="username">
             <label for="">Password:</label>
-            <input type="password" name="password" placeholder="password">
+            <input bind:this={password} type="password" name="password" placeholder="password">
+            <input type="submit" placeholder="send">
         </fieldset>
     </form>
 </section>

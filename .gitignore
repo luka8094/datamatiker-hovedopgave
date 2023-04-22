@@ -40,9 +40,12 @@ build/Release
 # Dependency directories
 node_modules/
 jspm_packages/
-specs/
+
+# Application specific directories
+ann/
 data/
-uploads/
+specs/
+temp/
 
 # TypeScript v1 declaration files
 typings/

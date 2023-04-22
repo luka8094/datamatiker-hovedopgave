@@ -7,6 +7,19 @@ Forfatter : luka8094
 
 Applikationstitel : Mindbench
 
+Sprog :
+
+- JavaScript
+- Python
+
+Markup :
+
+- HTML
+
+Styling :
+
+- CSS
+
 Backend moduler :
 
 - Express
