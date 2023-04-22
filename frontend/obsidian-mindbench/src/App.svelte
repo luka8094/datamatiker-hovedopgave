@@ -2,6 +2,7 @@
   import svelteLogo from './assets/svelte.svg'
   import viteLogo from '/vite.svg'
   import Counter from './lib/Counter.svelte'
+  import Login from './pages/Login.svelte';
 
   let testFile
 
@@ -29,15 +30,15 @@
 </script>
 
 <main>
+  <Login />
+  <!--
   <div>
-    <!--
     <a href="https://vitejs.dev" target="_blank" rel="noreferrer">
       <img src={viteLogo} class="logo" alt="Vite Logo" />
     </a>
     <a href="https://svelte.dev" target="_blank" rel="noreferrer">
       <img src={svelteLogo} class="logo svelte" alt="Svelte Logo" />
     </a>
-    -->
     <form on:submit={testCall}>
       <fieldset>
         <label for="testFile">Upload something</label>
@@ -46,6 +47,7 @@
       </fieldset>
     </form>
   </div>
+-->
   <!--
   <h1>Vite + Svelte</h1>
 
@@ -63,6 +65,7 @@
 </main>
 
 <style>
+  /*
   .logo {
     height: 6em;
     padding: 1.5em;
@@ -77,7 +80,7 @@
   }
   .read-the-docs {
     color: #888;
-  }
+  }*/
 
   fieldset{
     display: flex;

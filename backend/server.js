@@ -3,7 +3,7 @@ import "dotenv/config"
 const app = express()
 const {PORT} = process.env
 
-//AWS cloud connection test
+/*AWS cloud connection test
 import AWS from "aws-sdk"
 const {
     AWS_A, 
@@ -26,10 +26,12 @@ const s3 = new AWS.S3({region: AWS_REGION})
         Key: "file-upload-test.txt"
     }).promise()
 })()
+*/
 
 import path from "path"
 app.use(express.static(path.resolve("../frontend/obsidian-mindbench/dist")))
 
+/*
 import * as bodyParser from "body-parser"
 app.use(express.json({limit: "10mb"}))
 app.use(express.urlencoded({extended: true, limit: "10mb", parameterLimit: 50000}))
@@ -39,7 +41,7 @@ app.get("/test", (req, res) => {
 })
 
 import multer from "multer"
-const upload = multer({dest: "./uploads"})
+const upload = multer({dest: "./temp"})
 
 app.post("/upload-file", upload.single("file"), async (req, res) => {
     console.log(req.file)

@@ -10,10 +10,13 @@ Applikationstitel : Mindbench
 Backend moduler :
 
 - Express
+- Bcrypt
 - Helmet
+- JSONwebtoken
 - AWS-sdk
 - Multer
-- nexe
+- Mongoose
+- Nexe
 
 Frontend framework :
 - Svelte
