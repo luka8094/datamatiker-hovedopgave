@@ -20,4 +20,8 @@
         width: 100%;
         justify-content: center;
     }
+    
+    h1{
+        margin: auto;
+    }
 </style>

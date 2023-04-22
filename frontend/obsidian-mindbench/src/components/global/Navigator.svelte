@@ -3,6 +3,7 @@
     import {Router, Link, Route, useNavigate} from "svelte-navigator"
     import Login from "../../pages/Login.svelte"
     import Main from "../../pages/Main.svelte"
+    import Prediction from "../../pages/Prediction.svelte"
 
     function logout(){
         $authorized = false
@@ -17,7 +18,7 @@
                 <Link to="/">Logout</Link>
             </div>
             <div>
-                <Link to="/">Test</Link>
+                <Link to="/forecast">Forecast</Link>
             </div>
             <div>
                 <Link to="/">Test</Link>
@@ -26,11 +27,13 @@
     {/if}
     <Route path="/" component={Login}/>
     <Route path="/dashboard" component={Main}/>
+    <Route path="/forecast" component={Prediction}/>
 </Router>
 
 <style>
     nav{
         display: flex;
+        position: absolute;
         height: 100px;
         width: 100%;
         background: rgba(100,150,10,.5);

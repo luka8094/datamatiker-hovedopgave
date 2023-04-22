@@ -17,13 +17,18 @@ app.post("/upload-file", upload.single("file"), async (req, res) => {
 */
 import {spawn} from "child_process"
 filesRouter.post("/predict", async(req, res) => {
+    console.log(req.body)
     const {input} = req.body
+    console.log(input)
 
     const pass_back_test = [input]
-    const sub_process = spawn('python', ['../ann/test.py', JSON.stringify(pass_back_test)])
+
+    const sub_process = spawn('python', ['./ann/test.py', JSON.stringify(pass_back_test)])
 
     sub_process.stdout.on('data', (data) => {
-        console.log("Data pass back status: %s", JSON.parse(data.toString()))
+        res.send(JSON.parse(data.toString()))
     })
 })
+
+export default filesRouter
 

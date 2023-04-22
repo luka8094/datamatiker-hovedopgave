@@ -56,6 +56,10 @@ app.post("/download-file:name", (req, res) => {
 })
 */
 
+import filesRouter from "./routers/filesRouter.js"
+app.use(filesRouter)
+
+/*
 import {spawn} from "child_process"
 
 const pass_back_test = ['attempting pass back']
@@ -65,6 +69,6 @@ const sub_process = spawn('python', ['./ann/test.py', JSON.stringify(pass_back_t
 sub_process.stdout.on('data', (data) => {
     console.log("Data pass back status: %s", JSON.parse(data.toString()))
 })
-
+*/
 
 app.listen(PORT, () => console.log("Server running on port: %s", PORT))
