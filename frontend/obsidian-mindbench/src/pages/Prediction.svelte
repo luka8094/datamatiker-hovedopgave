@@ -18,6 +18,10 @@
 </script>
 
 <section>
+    <article>
+    This application has a set of trained models
+    Try giving it a value to see the predicted value
+    </article>
     <form on:submit={forecast}>
         <fieldset>
             <label for="forecast">Forecast</label>

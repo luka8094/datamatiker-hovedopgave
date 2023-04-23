@@ -4,6 +4,7 @@
     import Login from "../../pages/Login.svelte"
     import Main from "../../pages/Main.svelte"
     import Prediction from "../../pages/Prediction.svelte"
+    import Custom from "../../pages/Custom.svelte"
 
     function logout(){
         $authorized = false
@@ -14,20 +15,26 @@
 <Router>
     {#if $authorized}
         <nav>
-            <div on:click={logout}>
-                <Link to="/">Logout</Link>
-            </div>
-            <div>
-                <Link to="/forecast">Forecast</Link>
-            </div>
-            <div>
-                <Link to="/">Test</Link>
+            <div class="main-menu">
+                <div on:click={logout}>
+                    <Link to="/">Logout</Link>
+                </div>
+                <div>
+                    <Link to="/app/sample">Sample</Link>
+                </div>
+                <div>
+                    <Link to="/app/create">Create model</Link>
+                </div>
+                <div>
+                    <Link to="/app">Test</Link>
+                </div>
             </div>
         </nav>
     {/if}
     <Route path="/" component={Login}/>
-    <Route path="/dashboard" component={Main}/>
-    <Route path="/forecast" component={Prediction}/>
+    <Route path="/app" component={Main}/>
+    <Route path="/app/create" component={Custom}/>
+    <Route path="/app/sample" component={Prediction}/>
 </Router>
 
 <style>
@@ -42,10 +49,27 @@
     nav div{
         display: flex;
         width: 100px;
-        height: 150px;
     }
 
-    nav div:first-child{
+    .main-menu{
+        display: flex;
+        border: solid 1px black;
+        width: fit-content;
+    }
+
+    .main-menu:first-child{
         margin-left: auto;
+    }
+
+    .main-menu div{
+        display: flex;
+        justify-content: center;
+        align-items: center;
+    }
+
+    @media screen and (min-width: 1200px){
+        .main-menu{
+            margin-right: 200px;
+        }
     }
 </style>

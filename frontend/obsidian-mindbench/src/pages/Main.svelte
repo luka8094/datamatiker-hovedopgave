@@ -10,7 +10,12 @@
 </script>
 
 <section>
-    <h1>Welcome to the dashboard</h1>
+    <aside id="user-history">
+
+    </aside>
+    <div>
+        <h1>Welcome to the dashboard</h1>
+    </div>
 </section>
 
 <style>
@@ -21,7 +26,23 @@
         justify-content: center;
     }
     
+    #user-history{
+        display: flex;
+        flex-direction: column;
+        width: 300px;
+        background: rgba(200,0,200,.5);
+        overflow: hidden;
+        overflow-y: scroll;
+    }
+
+    div{
+        display: flex;
+        width: calc(100% - 300px);
+        height: inherit;
+    }
+
     h1{
         margin: auto;
+        text-align: center;
     }
 </style>
