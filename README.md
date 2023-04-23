@@ -10,7 +10,7 @@ Applikationstitel : Mindbench
 Sprog :
 
 - JavaScript
-- Python
+- Python 🐍
 
 Markup :
 
@@ -36,7 +36,7 @@ Frontend framework :
 
 Test suite :
 - Chai
-- Mocha
+- Mocha 
 
 ## Beskrivelse
 
@@ -46,4 +46,20 @@ BI Webapp værktøj til forudsigelse af nøgletal i datasæt og generering af ML
 
 Instruktioner til kørsel af applikation :
 
+Forudsætninger for ekskvering :
+
+- Node.Js minimum version 16.17.0 (v16.17.0) 
+- Python minimum version 3.10.7
+
 ``` commands og cli her ```
+
+```git clone https://github.com/luka8094/datamatiker-hovedopgave```
+
+```$ cd ./datamatiker-hovedopgave/backend```
+
+```$ npm init -y && npm install```
+
+```$ npm run start-dev```
+
+```$ npm run start-test```
+
