@@ -42,6 +42,10 @@
         font-size: 2em;
     }
 
+    h1:focus{
+        outline: none;
+    }
+
     section{
         display: flex;
         flex-direction: column;

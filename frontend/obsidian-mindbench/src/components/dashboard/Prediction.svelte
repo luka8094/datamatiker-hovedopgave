@@ -1,5 +1,6 @@
 <script>
     let userInput
+    let answer
 
     async function forecast(e){
         e.preventDefault()
@@ -12,15 +13,17 @@
             }
         })
 
-        const answer = await response.json()
+        answer = await response.json()
         console.log(answer)
     }
+
+    $: answer = answer
 </script>
 
 <section>
     <article>
-    This application has a set of trained models
-    Try giving it a value to see the predicted value
+    This is a pretrained DNN model
+    Give it value and see what it predicts
     </article>
     <form on:submit={forecast}>
         <fieldset>
@@ -29,14 +32,26 @@
             <input type="submit" placeholder="submit">
         </fieldset>
     </form>
+    {#if answer}
+        <p>{answer}</p>
+    {/if}
 </section>
 
 <style>
     section{
         display: flex;
-        height: 100vh;
-        width: 100%;
+        flex-direction: column;
+        width: calc(100% - 300px);
         background: lightblue;
+        overflow: hidden;
+    }
+
+    article{
+        display: flex;
+        background: blue;
+        height: 100px;
+        width: 300px;
+        margin: auto;
     }
 
     form, fieldset{
