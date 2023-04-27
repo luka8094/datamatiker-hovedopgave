@@ -3,15 +3,18 @@
     import {Router, Link, Route, useNavigate} from "svelte-navigator"
     import Login from "../../pages/Login.svelte"
     import Main from "../../pages/Main.svelte"
+    import Signup from "../../pages/Signup.svelte"
 
 
 </script>
 
 <Router>
     <Route path="/" component={Login}/>
-    <Route path="/app" component={Main}/>
+    <Route path="/signup" component={Signup}/>
+    <Route path="/@app" component={Main}/>
 </Router>
-
+ 
+<!--
 <style>
     nav{
         display: flex;
@@ -50,3 +53,4 @@
         }
     }
 </style>
+-->

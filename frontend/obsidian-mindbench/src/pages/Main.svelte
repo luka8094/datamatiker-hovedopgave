@@ -2,20 +2,16 @@
     import {authorized} from "../stores/sysdriver"
     import {useNavigate} from "svelte-navigator"
 
-    import Prediction from "../components/dashboard/Prediction.svelte"
-    import Custom from "../components/dashboard/Custom.svelte"
-    import Splash from "../components/dashboard/Splash.svelte"
-    import Archive from "../components/dashboard/Archive.svelte"
+    import Prediction from "../components/Dashboard/Prediction.svelte"
+    import Custom from "../components/Dashboard/Custom.svelte"
+    import Splash from "../components/Dashboard/Splash.svelte"
+    import Archive from "../components/Dashboard/Archive.svelte"
 
-    import HistoryElement from "../components/dashboard/history/HistoryElement.svelte"
+    import HistoryElement from "../components/Dashboard/UserHistory/HistoryElement.svelte"
 
-    const testArray = ["test", "test", "test","test", "test", "test","test", "test", "test"]
+    const testArray = ["test", "test", "test","test", "test", "test"]
 
     const navigate = useNavigate()
-
-    $: if(!$authorized){
-        navigate("/")
-    }
 
     function logout(){
         navigate("/")
@@ -29,12 +25,13 @@
         <div id="logo">
         </div>    
         <div id="menu-container">
-            <button on:click={logout}>Logout</button>
-            <button on:click={() => console.log("Archvie subpage in development")}>Report</button>
-            <button on:click={() => console.log("Archvie subpage in development")}>Archive</button>
-            <button on:click={() => {VIEW = Prediction}}>Tester</button>
-            <button on:click={() => {VIEW = Custom}}>Create model</button>
-            <button on:click={() => {VIEW = Splash}}>Dashboard</button>
+            <button on:click={() => logout()}>Logout</button>
+            <button on:click={() => console.log("Report subpage in development")}>Settings</button>
+            <button on:click={() => console.log("Report subpage in development")}>Report</button>
+            <button on:click={() => VIEW = Archive}>Archive</button>
+            <button on:click={() => VIEW = Prediction}>Tester</button>
+            <button on:click={() => VIEW = Custom}>Create model</button>
+            <button on:click={() => VIEW = Splash}>Dashboard</button>
         </div>
     </nav>
     <div>

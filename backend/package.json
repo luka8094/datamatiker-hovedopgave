@@ -7,12 +7,13 @@
   "scripts": {
     "start-dev": "nodemon server.js",
     "start-test": "mocha ./specs/*.spec.js",
-    "start": "node server.js"
+    "seed-db": "nodemon ./data/database/seeding/seeds.js"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@google-cloud/bigquery": "^6.2.0",
     "aws-sdk": "^2.1360.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",

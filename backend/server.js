@@ -31,6 +31,7 @@ const s3 = new AWS.S3({region: AWS_REGION})
 import path from "path"
 app.use(express.static(path.resolve("../frontend/obsidian-mindbench/dist")))
 
+
 app.use(express.json({limit: "10mb"}))
 app.use(express.urlencoded({extended: true, limit: "10mb", parameterLimit: 50000}))
 /*
@@ -56,8 +57,14 @@ app.post("/download-file:name", (req, res) => {
 })
 */
 
+import authRouter from "./routers/authRouter.js"
+app.use(authRouter)
+
 import filesRouter from "./routers/filesRouter.js"
 app.use(filesRouter)
+
+import customModelsRouter from "./routers/customModelsRouter.js"
+app.use(customModelsRouter)
 
 /*
 import {spawn} from "child_process"

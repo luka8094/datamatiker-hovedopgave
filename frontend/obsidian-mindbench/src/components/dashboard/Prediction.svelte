@@ -1,11 +1,11 @@
 <script>
     let userInput
-    let answer
+    let answer, answerTwo, answerThree
 
     async function forecast(e){
         e.preventDefault()
         
-        const response = await fetch("/predict", {
+        const response = await fetch("/api/predict", {
             method: 'POST',
             body: JSON.stringify({input: userInput.value}),
             headers: {
@@ -13,11 +13,15 @@
             }
         })
 
-        answer = await response.json()
-        console.log(answer)
+        const {data} = await response.json()
+        answer = data
+
+        const testResponse = await fetch("/api/")
     }
 
     $: answer = answer
+    $: answerTwo = answerTwo
+    $: answerThree = answerThree
 </script>
 
 <section>
@@ -51,7 +55,7 @@
         background: blue;
         height: 100px;
         width: 300px;
-        margin: auto;
+        margin: 10px auto;
     }
 
     form, fieldset{
@@ -60,9 +64,9 @@
     }
 
     form{
-        height: 300px;
+        height: 100px;
         width: 250px;
-        margin: auto;
+        margin: 10px auto;
     }
 
     fieldset{
@@ -71,5 +75,9 @@
 
     input{
         margin: 10px 0;
+    }
+
+    p{
+        margin: 0 auto auto;
     }
 </style>

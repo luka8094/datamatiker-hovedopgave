@@ -1,5 +1,7 @@
 <script>
-
+    import {authorized} from "../../stores/sysdriver"
 </script>
 
-<slot/>
+{#if $authorized}
+    <slot/>
+{/if}

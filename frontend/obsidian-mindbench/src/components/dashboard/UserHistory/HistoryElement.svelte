@@ -7,7 +7,7 @@
 </script>
 
 <div>
-    <button data-fileName={fileName} on:click={openFile}>:SaveHistoryElement:</button>
+    <button data-fileName={fileName} on:click={openFile}>{fileName}.h5</button>
 </div>
 
 <style>

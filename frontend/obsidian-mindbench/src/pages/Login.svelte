@@ -5,13 +5,22 @@
 
     const navigate = useNavigate()
 
-    function login(){
-        if(username.value === "testuser" && password.value === "password"){ 
-            console.log("login credentials accepted!")
-            $authorized = true
-            navigate("/app")
+    async function login(e){
+        const response = await fetch("/api/login",{
+            method: 'POST'
+        })
+
+        const {data} = await response.json()
+        console.log(data)
+        $authorized = data
+
+        if($authorized){
+            navigate("/@app")   
         }
-        else console.log("access denied!")
+    }
+
+    function signupRedirect(){
+        navigate("/signup")
     }
 </script>
 
@@ -19,7 +28,7 @@
     <div id="logo">
         <h1>Obsidian mindbench</h1>
     </div>
-    <form on:submit={login}>
+    <form on:submit|preventDefault={login}>
         <fieldset>
             <h1>Sign in</h1>
             <label for="">Username:</label>
@@ -33,7 +42,7 @@
         </fieldset>
     </form>
     <div id="signup">
-        <p>No account?</p><button>sign up here!</button>
+        <p>No account?</p><button on:click={signupRedirect}>sign up here!</button>
     </div>
 </section>
 
