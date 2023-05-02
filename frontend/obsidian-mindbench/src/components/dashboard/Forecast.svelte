@@ -1,10 +1,10 @@
 <script>
+    import {resizeView} from "../../stores/sysdriver"
+
     let userInput
     let answer, answerTwo, answerThree
 
-    async function forecast(e){
-        e.preventDefault()
-        
+    async function forecast(){
         const response = await fetch("/api/predict", {
             method: 'POST',
             body: JSON.stringify({input: userInput.value}),
@@ -19,43 +19,51 @@
         const testResponse = await fetch("/api/")
     }
 
+    function uploadFile(){
+
+    }
+
     $: answer = answer
     $: answerTwo = answerTwo
     $: answerThree = answerThree
 </script>
 
-<section>
-    <article>
-    This is a pretrained DNN model
-    Give it value and see what it predicts
-    </article>
-    <form on:submit={forecast}>
+<section style="{ $resizeView ? "padding-left: 0px;" : "padding-left: 300px"}">
+    <h1>Model tester</h1>
+    <p>Forecast values with your trained models here</p>
+    
+    <form on:submit|preventDefault={forecast}>
         <fieldset>
             <label for="forecast">Forecast</label>
             <input bind:this={userInput} type="text" name="forecast" placeholder="input a value">
             <input type="submit" placeholder="submit">
         </fieldset>
     </form>
+    <form on:submit|preventDefault={uploadFile}>
+        <input type="file" accept=".h5">
+        <input type="submit" value="upload file"/>
+    </form>
     {#if answer}
         <p>{answer}</p>
     {/if}
+    <!--
+    <form>
+        <input type="text" id="user-input">
+        <input type="file" accept="" placeholder="Upload a spreadsheet">
+        <input type="submit">
+    </form>
+    -->
 </section>
 
 <style>
     section{
         display: flex;
         flex-direction: column;
-        width: calc(100% - 300px);
-        background: lightblue;
+        width: 100%;
         overflow: hidden;
-    }
-
-    article{
-        display: flex;
-        background: blue;
-        height: 100px;
-        width: 300px;
-        margin: 10px auto;
+        align-items: center;
+        padding-top: 100px;
+        padding-left: 300px;
     }
 
     form, fieldset{
@@ -75,9 +83,5 @@
 
     input{
         margin: 10px 0;
-    }
-
-    p{
-        margin: 0 auto auto;
     }
 </style>

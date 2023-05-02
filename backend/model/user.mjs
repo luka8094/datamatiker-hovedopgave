@@ -9,12 +9,18 @@ const userDataSchema = mongoose.Schema({
 const userSchema = mongoose.Schema({
     username: {
         type: String,
-
+        required: true
     },
     password: {
-        type: String
+        type: String,
+        required: true
     },
     email: {
-        type: String
-    }
+        type: String,
+        required: true
+    },
+    settings: userDataSchema
 })
+
+const User = mongoose.model("users", userSchema)
+export default User

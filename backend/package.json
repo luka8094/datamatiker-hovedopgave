@@ -1,13 +1,13 @@
 {
   "name": "backend",
-  "version": "1.0.0",
+  "version": "2.0.0",
   "description": "",
-  "main": "server.js",
+  "main": "app.js",
   "type": "module",
   "scripts": {
-    "start-dev": "nodemon server.js",
+    "start-dev": "nodemon app.js",
     "start-test": "mocha ./specs/*.spec.js",
-    "seed-db": "nodemon ./data/database/seeding/seeds.js"
+    "seed-db": "node ./data/database/seeding/initDatabase.js"
   },
   "keywords": [],
   "author": "",
@@ -17,17 +17,24 @@
     "aws-sdk": "^2.1360.0",
     "bcrypt": "^5.1.0",
     "body-parser": "^1.20.2",
+    "cookie-parser": "^1.4.6",
+    "crypto-js": "^4.1.1",
     "dotenv": "^16.0.3",
     "express": "^4.18.2",
     "express-fileupload": "^1.4.0",
+    "express-validator": "^7.0.1",
+    "javascript-obfuscator": "^4.0.2",
     "jsonwebtoken": "^9.0.0",
     "mongoose": "^7.0.4",
     "multer": "^1.4.5-lts.1",
-    "validator": "^13.9.0"
+    "validator": "^13.9.0",
+    "xlsx": "https://cdn.sheetjs.com/xlsx-0.19.3/xlsx-0.19.3.tgz"
   },
   "devDependencies": {
     "chai": "^4.3.7",
+    "jest": "^29.5.0",
     "mocha": "^10.2.0",
-    "nodemon": "^2.0.22"
+    "nodemon": "^2.0.22",
+    "supertest": "^6.3.3"
   }
 }

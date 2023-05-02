@@ -3,20 +3,27 @@ import {Router} from "express"
 const filesRouter = Router()
 const __dirname = path.resolve(path.dirname(''))
 
-/*
-app.get("/test", (req, res) => { 
-    res.send({data:"Endpoint connection test status: OK"})
-})
-
 import multer from "multer"
-const upload = multer({dest: "./temp"})
+const storage = multer.diskStorage(
+    {
+    destination: function(req, file, callback){ 
+        callback(null, "./temp")
+    },
+    filename: function(req, file, callback){
+        const randomized = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')
+        const extension = "."+file.originalname.split(".")[1]
+        callback(null, randomized(32)+extension)
+    }
+    }
+)
+const upload = multer({storage: storage})
 
-app.post("/upload-file", upload.single("file"), async (req, res) => {
-    console.log(req.file)
-    res.send({message: "All A-OK"})
+filesRouter.post("/upload-file", upload.single("file") , async (req, res) => {
+    console.log(req.file.originalname)
+    console.log(req.file.filename)
+    res.send({data: true})
 })
 
-*/
 
 import {spawn} from "child_process"
 filesRouter.post("/api/download", async (req, res) => {

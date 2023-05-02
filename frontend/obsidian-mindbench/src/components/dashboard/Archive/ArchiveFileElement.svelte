@@ -16,7 +16,8 @@
         const url = window.URL.createObjectURL(file)
 
         downloadButton.href = url
-        downloadButton.download = fileName+".h5"            
+        downloadButton.download = fileName+".h5"
+        downloadButton.click()            
 
         downloadButton.removeEventListener('click', getFile)
     }   
@@ -24,6 +25,9 @@
 
 <a tabindex="{tabNumber}" bind:this={downloadButton} role="button" data-file={fileName} on:click={getFile}>
     <div id="file-icon">
+        <div class="file-part-five">
+
+        </div>
         <div id="file-part-three">
             <div id="file-part-four">
 
@@ -33,6 +37,9 @@
             <div id="file-part-two">
             </div>
         </div>    
+        <div class="file-part-six">
+
+        </div>
     </div>
     <p>{fileName}.h5</p>
 </a>
@@ -54,7 +61,7 @@
         display: flex;
         height: 150px;
         width: 150px;
-        background: lightgray;
+        background: grey;
         clip-path: polygon(100% 100%, 100% 25%, 75% 0%, 0% 0%, 0% 100%);
         position: relative;
         border: solid 1px black;
@@ -69,30 +76,30 @@
         position: relative;
         height: 35px;
         width: 85px;
-        background: royalblue;
+        background: linear-gradient(45deg, grey, lightblue);
         top: -1px;
         left: 25px;
-        border: solid 2px black;
+        border: solid 2px gray;
         overflow: hidden;
     }
 
     #file-part-two{
         height: 35px;
-        width: 5px;
+        width: 15px;
         background: black;
         position: relative;
-        left: 75%;
+        left: 65%;
     }
 
     #file-part-three{
         display: flex;
-        height: 75px;
-        width: 75px;
+        height: 25px;
+        width: 25px;
         background: black;
         position: absolute;
         z-index: 10;
-        top: 30%;
-        left: 25%;
+        top: 60px;
+        left: 60px;
         border-radius: 100px;
     }
 
@@ -102,13 +109,26 @@
         height: 20px;
         background: lightgrey;
         position: absolute;
-        top: 35%;
-        left: 35%;
+        top: 2px;
+        left: 2px;
         border-radius: 100px;
     }
 
+    .file-part-five,
+    .file-part-six{
+        display: flex;
+        position: absolute;
+        height: 100%;
+        width: 15px;
+        background:linear-gradient(45deg, grey, lightgrey);
+    }
+
+    .file-part-six{
+        right: 0;
+    }
+
     a:hover{
-        border: dashed 2px black;
+        border: dashed 3px black;
         border-radius: 5px;
     }
 </style>
