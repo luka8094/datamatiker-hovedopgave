@@ -1,7 +1,8 @@
 <script>
-    import {authorized, resizeView} from "../stores/sysdriver"
+    import {authorized, resizeView} from "../stores/sysdll"
     import {useNavigate} from "svelte-navigator"
 
+    import Dataview from "../components/Dashboard/Dataview.svelte"
     import Forecast from "../components/Dashboard/Forecast.svelte"
     import Custom from "../components/Dashboard/Custom.svelte"
     import Splash from "../components/Dashboard/Splash.svelte"
@@ -9,7 +10,7 @@
 
     import HistoryElement from "../components/Dashboard/UserHistory/HistoryElement.svelte"
     
-    let fileHistory
+    let fileHistory, fileHistoryButton
     let VIEW = Splash
     const testArray = ["test", "test", "test","test", "test", "test", "test", "test", "test","test", "test", "test"]
 
@@ -19,8 +20,10 @@
         if(fileHistory.style.left != "-250px"){
             fileHistory.style.left = "-250px"
             fileHistory.style.marginRight = "-300px"
-            $resizeView = true
+            fileHistoryButton.children[0].style.transform = "rotate(90deg)"
 
+            $resizeView = true
+            
             Array.from(fileHistory.children).forEach((fileItem, i) => {
                 if(fileItem.tagName == "div") fileItem.style.opacity = ".5;"
             })
@@ -29,15 +32,23 @@
             Array.from(fileHistory.children).forEach(fileItem => {
                 if(fileItem.tagName == "div") fileItem.style.opacity = "1;"
             })
+            fileHistoryButton.children[0].style.transform = "rotate(0deg)"
 
             fileHistory.style.left = "0" 
             $resizeView = false
         }
     }
+    async function logout(){
+        const response = await fetch("/api/logout", {
+            method: 'DELETE'
+        })
 
-    function logout(){
-        $authorized = false
-        navigate("/")
+        const {status} = await response
+
+        if(status === 200){
+            $authorized = false
+            navigate("/")
+        }
     }
 </script>
 
@@ -49,7 +60,7 @@
         <div id="menu-container">
             <button on:click={() => logout()}><img src="/logout.svg" title="logout" alt="logout"/></button>
             <button on:click={() => console.log("BQ link subpage in development")}><img src="/big_query.svg" title="BigQuery integration" alt="BigQuery integration"></button>
-            <button on:click={() => console.log("Dataview subpage in development")}><img src="/dataview.svg" title="datasheet view" alt="datasheet view"/></button>
+            <button on:click={() => VIEW = Dataview}><img src="/dataview.svg" title="datasheet view" alt="datasheet view"/></button>
             <button on:click={() => console.log("Report subpage in development")}><img src="/report.svg" title="get report" alt="get report"></button>
             <button on:click={() => VIEW = Archive}><img src="/archive.svg" title="files archive" alt="files archive"/></button>
             <button on:click={() => VIEW = Forecast}><img src="/model_tester.svg" title="model test" alt="model test"/></button>
@@ -60,12 +71,12 @@
     <div style:class={ $resizeView ? 'reshapeSpace' : ''}>
         <aside bind:this={fileHistory} id="user-history">
             <h1>Workspace shortcuts
-                <button on:click={hideFileHistory} title="Show work history">
+                <button bind:this={fileHistoryButton} on:click={hideFileHistory} title="Show work history">
                     <div class="line line-one"></div>
                     <div class="line line-two"></div>
                 </button>
             </h1>
-            <div>
+            <div id="workspace-container">
                 {#each testArray as test}
                     <HistoryElement fileName={test}/>
                 {/each}
@@ -166,6 +177,10 @@
         border-radius: 5px;
     }
 
+    #workspace-container{
+        padding-top: 50px;
+    }
+
     button .line{
         display: flex;
         position: absolute;
@@ -176,13 +191,13 @@
 
     .line-one{
         left: calc(50% - 10px);
-        transform: rotate(45deg);
+        transform: rotate(0deg);
         z-index: 1;
     }
 
     .line-two{
         left: calc(50% - 10px);
-        transform: rotate(-45deg);
+        transform: rotate(0deg);
         z-index: 2;
     }
 

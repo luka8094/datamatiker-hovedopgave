@@ -1,7 +1,13 @@
 <script>
-    import {authorized} from "../../stores/sysdriver"
+    import {Route} from "svelte-navigator"
+    import PathProtection from "./PathProtection.svelte"
+
+    export let path
+
 </script>
 
-{#if $authorized}
-    <slot/>
-{/if}
+<Route {path}>
+    <PathProtection>
+        <slot />
+    </PathProtection>
+</Route>

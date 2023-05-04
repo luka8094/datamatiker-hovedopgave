@@ -5,6 +5,7 @@
     async function getFile(){
         const response = await fetch("/api/download", {
             method: 'POST',
+            credentials: 'include',
             headers: {
                 'Content-Type':'application/json'
             },
@@ -17,7 +18,6 @@
 
         downloadButton.href = url
         downloadButton.download = fileName+".h5"
-        downloadButton.click()            
 
         downloadButton.removeEventListener('click', getFile)
     }   
@@ -38,6 +38,9 @@
             </div>
         </div>    
         <div class="file-part-six">
+
+        </div>
+        <div id="file-part-seven">
 
         </div>
     </div>
@@ -125,6 +128,25 @@
 
     .file-part-six{
         right: 0;
+    }
+
+    .file-part-seven{
+        display: flex;
+        position: absolute;
+        height: 150px;
+        width: 200px;
+        background: white;
+    }
+
+    #file-part-seven{
+        display: flex;
+        position: absolute;
+        height: 55px;
+        width: 99px;
+        background: repeating-linear-gradient(0deg, white 0%, white 9%, blue 10%, blue 11%, white 21%, white 22%);
+        bottom: 0;
+        left: 25px;
+        border-radius: 5px 5px 0 0;
     }
 
     a:hover{

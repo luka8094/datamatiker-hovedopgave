@@ -1,5 +1,5 @@
 <script>
-    import {resizeView} from "../../stores/sysdriver";
+    import {resizeView} from "../../stores/sysdll";
     import ArchiveFileElement from "./Archive/ArchiveFileElement.svelte"
 
     const userFiles = ["filename1", "filename2", "model", "model2","model3", "anotherFile", "MyRNN","filename1", "filename2", "model", "model2","model3", "anotherFile", "MyRNN"]
@@ -20,7 +20,6 @@
 <style>
     section{
         display: flex;
-        position: absolute;
         min-height: calc(100% - 70px);
         max-height: fit-content;
         width: 100%;

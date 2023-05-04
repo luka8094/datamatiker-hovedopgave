@@ -18,14 +18,12 @@ const storage = multer.diskStorage(
 )
 const upload = multer({storage: storage})
 
-filesRouter.post("/upload-file", upload.single("file") , async (req, res) => {
-    console.log(req.file.originalname)
-    console.log(req.file.filename)
-    res.send({data: true})
+filesRouter.post("/api/upload-file", upload.single("file") , async (req, res) => {
+    const {filename} = req.file
+    res.send({data: filename}).status(202)
 })
 
 
-import {spawn} from "child_process"
 filesRouter.post("/api/download", async (req, res) => {
     //console.log("file received: %s", req.body.file)
     //const {file} = req.body
@@ -46,25 +44,27 @@ filesRouter.post("/api/download", async (req, res) => {
         console.error("An error occured: %s", data.toString())
     })
     */
-
-    const file_download = path.join(__dirname, "/temp/test.h5")
-    console.log(file_download)
-    res.download(file_download)
+   
+   const file_download = path.join(__dirname, "/temp/test.h5")
+   console.log(file_download)
+   res.download(file_download)
 })
 
 import validator from "validator"
+import {spawn} from "child_process"
 filesRouter.post("/api/predict", async(req, res) => {
     console.log(req.body)
     const {input} = req.body
     console.log(input)
 
-    if(!validator.isNumeric(input)) return res.send({data:"invalid input"})
+    //if(!validator.isNumeric(input)) return res.send({data:"invalid input"})
 
     const pass_back_test = [input]
 
     const sub_process = spawn('python', ['./ann/test.py', JSON.stringify(pass_back_test)])
 
     sub_process.stdout.on('data', (data) => {
+        console.log(data.toString())
         res.send({data: JSON.parse(data.toString())})
     })
 })

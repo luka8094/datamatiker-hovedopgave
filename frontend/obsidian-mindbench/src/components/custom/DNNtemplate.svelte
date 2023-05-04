@@ -1,24 +1,25 @@
 <script>
+    import {temporaryStorage} from "../../stores/sysdll"
     let showOptions = [false, false, false]
     let datasheet, inputs, outputs
    
     async function sendFile(){
-        console.log(datasheet[0])
         const form = new FormData()
         
         form.append("name", datasheet[0].name)
         form.append("file", datasheet[0])
-        console.log(form)
 
-        const response = await fetch("/upload-file", {
-        method: 'POST',
-        body: form
+        const response = await fetch("/api/upload-file", {
+            method: 'POST',
+            credentials: 'include',
+            body: form
         })
 
         const {data} = await response.json()
-        console.log(data)
 
-        if(data){
+        if(response.status === 202){
+            $temporaryStorage.push(data)
+            console.log($temporaryStorage)
             showOptions[0] = true
         }
     }

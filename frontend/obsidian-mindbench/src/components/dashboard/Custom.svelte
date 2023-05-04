@@ -1,5 +1,5 @@
 <script>
-    import {resizeView} from "../../stores/sysdriver"
+    import {resizeView} from "../../stores/sysdll"
 
     import DNNtemplate from "../Custom/DNNtemplate.svelte"
     import RNNtemplate from "../Custom/RNNtemplate.svelte"

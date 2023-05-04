@@ -62,11 +62,12 @@ madbConnection
 import authRouter from "./routers/accessRouter.js"
 app.use(authRouter)
 
+import {tokenChecker} from "./utils/jwtVerify.js"
 import filesRouter from "./routers/filesRouter.js"
-app.use(filesRouter)
+app.use(tokenChecker, filesRouter)
 
 import customModelsRouter from "./routers/modelsRouter.js"
-app.use(customModelsRouter)
+app.use(tokenChecker, customModelsRouter)
 
 app.listen(PORT, () => console.log("Server running on port: %s", PORT))
 

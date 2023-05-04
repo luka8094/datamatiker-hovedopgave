@@ -1,22 +1,25 @@
 <script>
-    import {resizeView} from "../../stores/sysdriver"
+    import {resizeView} from "../../stores/sysdll"
 
     let userInput
     let answer, answerTwo, answerThree
 
     async function forecast(){
+        console.log(userInput.value)
         const response = await fetch("/api/predict", {
             method: 'POST',
-            body: JSON.stringify({input: userInput.value}),
+            credentials: 'include',
             headers: {
                 'Content-Type': 'application/json'
-            }
+            },
+            body: JSON.stringify({input: userInput.value}),
         })
 
         const {data} = await response.json()
+        console.log(data)
         answer = data
 
-        const testResponse = await fetch("/api/")
+        //const testResponse = await fetch("/api/")
     }
 
     function uploadFile(){
@@ -24,11 +27,9 @@
     }
 
     $: answer = answer
-    $: answerTwo = answerTwo
-    $: answerThree = answerThree
 </script>
 
-<section style="{ $resizeView ? "padding-left: 0px;" : "padding-left: 300px"}">
+<section style="{$resizeView ? "padding-left: 0px;" : "padding-left: 300px"}">
     <h1>Model tester</h1>
     <p>Forecast values with your trained models here</p>
     

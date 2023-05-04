@@ -1,9 +1,19 @@
 <script>
+    import {authorized} from "../stores/sysdll"
     import {useNavigate} from "svelte-navigator"
-    import {authorized} from "../stores/sysdriver"
-    let email, password
+
+    import {onMount} from "svelte"
+    let email, password, googleLink
 
     const navigate = useNavigate()
+
+    onMount(async () => {
+        const response = await fetch("/api/google")
+        const {data} = await response.json()
+        console.log(data)
+
+        googleLink.href = data
+    })
 
     async function login(){
         const response = await fetch("/api/login",{
@@ -20,8 +30,8 @@
         const {data} = await response.json()
         console.log(data)
         $authorized = data
-
-        if($authorized === true){
+        
+        if(response.status === 200 && $authorized){
             navigate("/@app")   
         }
     }
@@ -47,10 +57,10 @@
             <input name="submit" type="submit" value="sign in">
             <p>or</p>
             <div id="google-signin">
-                <button type="submit" >
+                <a bind:this={googleLink}>
                     <span>Google sign-in</span>
                     <img src="/google_logo.png" alt="Google sign in"/>
-                </button>
+                </a>
             </div>
         </fieldset>
     </form>
@@ -82,19 +92,6 @@
         color: white;
         background: linear-gradient(45deg, lightblue, lightblue, #07EEC7, white);
         animation: background-animation 20s infinite; 
-    }
-
-    @keyframes background-animation{
-        0%{
-            left: 0;
-        }
-        50%{
-         
-           left: -2000px;
-        }
-        100%{
-            left: 0;
-        }
     }
 
     section{
@@ -145,11 +142,12 @@
         padding: 10px 0;
     }
 
-    #google-signin button{
+    #google-signin a{
         height: 40px;
         width: 100%;
         border: solid 1px black;
         border-radius: 10px;
+        color: black;
     }
 
     img{
@@ -186,7 +184,7 @@
     }
 
     input[type="submit"],
-    button{
+    a{
         display: flex;
         height: 35px;
         width: 100%;
@@ -201,14 +199,14 @@
         margin-bottom: 20px;
     }
 
-    button{
+    a{
         display: flex;
         justify-content: space-between;
         padding: 0 25px;
         font-weight: 900;
     }
 
-    button span{
+    a span{
         line-height: 15px;
     }
 
@@ -253,16 +251,16 @@
         font-size: 1.5em;
     }
 
-    /*
-    #signup{
-        width: fit-content;
-        display: flex;
-        align-items: center;
-        margin: 0 auto auto;
-        font-size: 12px;
+    @keyframes background-animation{
+        0%{
+            left: 0;
+        }
+        50%{
+         
+           left: -2000px;
+        }
+        100%{
+            left: 0;
+        }
     }
-
-    #signup button{
-        padding: 5px;
-    }*/
 </style>

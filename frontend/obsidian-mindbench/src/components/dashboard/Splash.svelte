@@ -1,5 +1,5 @@
 <script>
-    import {resizeView} from "../../stores/sysdriver"
+    import {resizeView} from "../../stores/sysdll"
 </script>
 
 <div style="{ $resizeView ? "padding-left: 0px;" : "padding-left: 300px"}">

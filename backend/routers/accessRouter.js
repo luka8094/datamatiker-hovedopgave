@@ -1,13 +1,69 @@
+import "dotenv/config"
 import {Router} from "express"
 import {ExpressValidator, body, validationResult} from "express-validator"
 const authRouter = Router()
 
-import "dotenv/config"
-const {SALT_ROUNDS, JWT_ACCESS_TOKEN} = process.env
+const {
+    JWT_ACCESS_TOKEN, 
+    GOOGLE_CLIENT_ID, 
+    GOOGLE_CLIENT_SECRET, 
+    GOOGLE_OAUTH_REDIRECT_URL} = process.env
 import validator from "validator"
 import User from "../model/user.mjs"
 import bcrypt from "bcrypt"
 import jsonwebtoken from "jsonwebtoken"
+import {setup, clear} from "../utils/tempHelper.js"
+import getGoogleOAuth from "../utils/googleURLtermsHelper.js"
+authRouter.get("/api/google", (req, res) => {
+    res.send({data: getGoogleOAuth()})
+})
+
+import axios from "axios"
+import qs from 'qs'
+authRouter.get("/api/sessions/google/auth", async (req, res) => {
+    const {code} = req.query
+    const URL = "https://oauth2.googleapis.com/token"
+
+    const values = {
+        code,
+        client_id: GOOGLE_CLIENT_ID,
+        client_secret: GOOGLE_CLIENT_SECRET,
+        redirect_uri: GOOGLE_OAUTH_REDIRECT_URL,
+        grant_type: "authorization_code"
+    }
+
+    try{
+        const tokensResponse = await axios.post(
+            URL, 
+            qs.stringify(values),
+            { 
+                headers: {
+                'Content-Type': "application/x-www-form-urlencoded"
+                } 
+            }
+        )
+
+        const {id_token, access_token} = tokensResponse.data
+
+        const googleUser = jsonwebtoken.decode(id_token)
+
+        const userResponse = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`,
+                {headers: {
+                    Authorization: `Bearer ${id_token}`
+                }
+            }
+        )
+
+        console.log(userResponse)
+        const accessToken = jsonwebtoken.sign({at: access_token},JWT_ACCESS_TOKEN)
+
+        res.cookie('jwt', accessToken, {maxAge: 5 * 60 * 1000, httpOnly: true})
+        res.redirect("/")
+    }catch(error){
+        console.error(error.message)
+    }
+})
+
 authRouter.post("/api/login", 
     body('email').trim().notEmpty().isEmail().isLength({min: 5, max: 30}),
     body('password').trim().notEmpty().isLength({min: 5, max: 30}),
@@ -38,19 +94,17 @@ authRouter.post("/api/login",
     delete result._id
     delete result.password
     
-    console.log(token)
     res.cookie('jwt', token, {httpOnly: true, maxAge: 6 * 60 * 1000})
     res.send({data:true})
 })
-
 
 authRouter.post("/api/user", (req, res) => {
     res.send({data: "user data"})
 })
 
 authRouter.delete("/api/logout", (req, res) => {
-    console.log("reached logout")
-    res.send({data:false})
+    res.cookie('jwt',{maxAge: 0})
+    res.sendStatus(200)
 })
 
 export default authRouter

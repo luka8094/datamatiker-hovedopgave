@@ -10,9 +10,10 @@
         form.append("file", datasheet[0])
         console.log(form)
 
-        const response = await fetch("/upload-file", {
-        method: 'POST',
-        body: form
+        const response = await fetch("/api/upload-file", {
+            method: 'POST',
+            credentials: 'include',
+            body: form
         })
 
         const {data} = await response.json()
