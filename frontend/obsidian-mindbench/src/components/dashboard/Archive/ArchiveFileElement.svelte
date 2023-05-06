@@ -13,7 +13,7 @@
         })
 
         const download = await response.blob()
-        const file = new Blob([download],{type: "applicaiton/octet-stream"})
+        const file = new Blob([download],{type: "applicaiton/x-hdf5"})
         const url = window.URL.createObjectURL(file)
 
         downloadButton.href = url
@@ -23,7 +23,7 @@
     }   
 </script>
 
-<a tabindex="{tabNumber}" bind:this={downloadButton} role="button" data-file={fileName} on:click={getFile}>
+<a tabindex="{tabNumber}" bind:this={downloadButton} role="button" data-file={fileName} on:click={getFile} href={undefined}>
     <div id="file-icon">
         <div class="file-part-five">
 
@@ -128,14 +128,6 @@
 
     .file-part-six{
         right: 0;
-    }
-
-    .file-part-seven{
-        display: flex;
-        position: absolute;
-        height: 150px;
-        width: 200px;
-        background: white;
     }
 
     #file-part-seven{

@@ -61,7 +61,7 @@
         {#if showOptions[2]}
             <div class="option">
                 <h1>4. Download!</h1>
-                <a role="button" tabindex="0" on:click={getModelFile}>Model ready! get the file</a>
+                <a role="button" tabindex="0" on:click={getModelFile} href={undefined}>Model ready! get the file</a>
             </div>
         {/if}
     </div>

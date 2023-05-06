@@ -10,9 +10,8 @@ const storage = multer.diskStorage(
         callback(null, "./temp")
     },
     filename: function(req, file, callback){
-        const randomized = size => [...Array(size)].map(() => Math.floor(Math.random() * 16).toString(16)).join('')
         const extension = "."+file.originalname.split(".")[1]
-        callback(null, randomized(32)+extension)
+        callback(null, file.fieldname+"_"+Date.now()+extension)
     }
     }
 )
@@ -20,9 +19,37 @@ const upload = multer({storage: storage})
 
 filesRouter.post("/api/upload-file", upload.single("file") , async (req, res) => {
     const {filename} = req.file
-    res.send({data: filename}).status(202)
+    console.log("filename: %s,\n originalname: %s",req.file.filename, req.file.originalname)
+    res.status(202).send({data: filename})
 })
 
+import AWS from "aws-sdk"
+const {
+    AWS_A, 
+    AWS_K, 
+    AWS_BUCKET, 
+    AWS_REGION
+} = process.env
+
+AWS.config.update({
+    accessKeyId: AWS_A,
+    secretAccessKey: AWS_K
+})
+
+const s3 = new AWS.S3({region: AWS_REGION})
+
+/*AWS cloud connection test
+;(async() => {
+    await s3.putObject({
+        Body: "this is a test",
+        Bucket: AWS_BUCKET,
+        Key: "file-upload-test.txt"
+    }).promise()
+})()
+*/
+filesRouter.post("/api/save-file", (req, res) => {
+
+})
 
 filesRouter.post("/api/download", async (req, res) => {
     //console.log("file received: %s", req.body.file)

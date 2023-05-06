@@ -1,5 +1,5 @@
 <script>
-    import {authorized, resizeView} from "../stores/sysdll"
+    import {authorized, resizeView, workspaceHistory} from "../stores/sysdll"
     import {useNavigate} from "svelte-navigator"
 
     import Dataview from "../components/Dashboard/Dataview.svelte"
@@ -43,9 +43,8 @@
             method: 'DELETE'
         })
 
-        const {status} = await response
-
-        if(status === 200){
+        if(await response.status === 200){
+            $workspaceHistory = []
             $authorized = false
             navigate("/")
         }
@@ -77,9 +76,13 @@
                 </button>
             </h1>
             <div id="workspace-container">
-                {#each testArray as test}
-                    <HistoryElement fileName={test}/>
-                {/each}
+                {#if $workspaceHistory.length !== 0 }
+                    {#each $workspaceHistory as item}
+                        <HistoryElement fileName={item}/>
+                    {/each}
+                {:else }
+                    <p id="workspace-message">No recent workfiles</p>
+                {/if}
             </div>
         </aside>
         <svelte:component this={VIEW}/>
@@ -179,6 +182,14 @@
 
     #workspace-container{
         padding-top: 50px;
+    }
+
+    #workspace-message{
+        margin: auto;
+        color: white;
+        font-weight: 600;
+        font-size: 1.5em;
+        opacity: .6;
     }
 
     button .line{

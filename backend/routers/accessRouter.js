@@ -1,6 +1,6 @@
 import "dotenv/config"
 import {Router} from "express"
-import {ExpressValidator, body, validationResult} from "express-validator"
+import {validationResult} from "express-validator"
 const authRouter = Router()
 
 const {
@@ -8,11 +8,9 @@ const {
     GOOGLE_CLIENT_ID, 
     GOOGLE_CLIENT_SECRET, 
     GOOGLE_OAUTH_REDIRECT_URL} = process.env
-import validator from "validator"
 import User from "../model/user.mjs"
 import bcrypt from "bcrypt"
 import jsonwebtoken from "jsonwebtoken"
-import {setup, clear} from "../utils/tempHelper.js"
 import getGoogleOAuth from "../utils/googleURLtermsHelper.js"
 authRouter.get("/api/google", (req, res) => {
     res.send({data: getGoogleOAuth()})
@@ -56,35 +54,22 @@ authRouter.get("/api/sessions/google/auth", async (req, res) => {
 
         console.log(userResponse)
         const accessToken = jsonwebtoken.sign({at: access_token},JWT_ACCESS_TOKEN)
-
+        
         res.cookie('jwt', accessToken, {maxAge: 5 * 60 * 1000, httpOnly: true})
-        res.redirect("/")
+        res.redirect("/#0")
     }catch(error){
         console.error(error.message)
     }
 })
 
-authRouter.post("/api/login", 
-    body('email').trim().notEmpty().isEmail().isLength({min: 5, max: 30}),
-    body('password').trim().notEmpty().isLength({min: 5, max: 30}),
-    async (req, res) => {
-    
+import {loginSanitizer} from "../utils/validationHelper.js"
+authRouter.post("/api/login", loginSanitizer(), async (req, res) => {
+    const errors = validationResult(req)
     const{email, password} = req.body
-    
-    const requestValidation = validationResult(req)
 
-    console.log(requestValidation)
-
-    /*
-    const validation = 
-    validator.isLength(email,{min: 8, max: 30, blacklisted_chars:"?=!;</>"}) 
-    && validator.isLength(password,{min: 8, max: 30, blacklisted_chars:"?=!;</>"})
-    */
-
-    //if(!validation) return res.status(403).send({data: "invalid email or password"})
+    if(!errors.isEmpty()) return res.status(403).send({data: "invalid credentials"})
     
     const result = await User.findOne({email: email}).select('password')
-    console.log(result)
 
 
     if(!await bcrypt.compare(password, result.password)) return res.status(403).send({data: "invalid email or password"})
@@ -99,7 +84,17 @@ authRouter.post("/api/login",
 })
 
 authRouter.post("/api/user", (req, res) => {
-    res.send({data: "user data"})
+    if(typeof req.cookies['jwt'] !== 'string') return res.send({data: false})
+    const jwt = req.cookies['jwt']
+
+    const claims = jsonwebtoken.verify(jwt, JWT_ACCESS_TOKEN, (error, data) => {
+            if(error) return false
+            else return data
+        }
+    )
+
+    if(!claims) return res.send({data: false})
+    else res.status(202).send({data: true})
 })
 
 authRouter.delete("/api/logout", (req, res) => {

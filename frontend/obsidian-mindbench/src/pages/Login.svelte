@@ -1,16 +1,26 @@
 <script>
     import {authorized} from "../stores/sysdll"
-    import {useNavigate} from "svelte-navigator"
+    import {useNavigate, useLocation} from "svelte-navigator"
 
-    import {onMount} from "svelte"
+    import {onMount, beforeUpdate, afterUpdate, onDestroy} from "svelte"
+    import {getCookie} from "svelte-cookie"
     let email, password, googleLink
 
     const navigate = useNavigate()
+    const location = useLocation()
 
     onMount(async () => {
+        const oAuth = document.location.hash
+        if(oAuth === "#0"){ 
+            console.log("#0", getCookie('jwt'))
+            navigate("/_")
+        }
+
         const response = await fetch("/api/google")
         const {data} = await response.json()
-        console.log(data)
+        const cookie = getCookie('jwt')
+
+        console.log("cookie check:", cookie)
 
         googleLink.href = data
     })
@@ -32,12 +42,8 @@
         $authorized = data
         
         if(response.status === 200 && $authorized){
-            navigate("/@app")   
+            navigate("/_")   
         }
-    }
-
-    function signupRedirect(){
-        navigate("/signup")
     }
 </script>
 
@@ -57,17 +63,13 @@
             <input name="submit" type="submit" value="sign in">
             <p>or</p>
             <div id="google-signin">
-                <a bind:this={googleLink}>
+                <a bind:this={googleLink} href={undefined}>
                     <span>Google sign-in</span>
                     <img src="/google_logo.png" alt="Google sign in"/>
                 </a>
             </div>
         </fieldset>
     </form>
-    <!--
-    <div id="signup">
-        <p>No account?</p><button on:click={signupRedirect}>sign up here!</button>
-    </div>-->
 </section>
 
 <style>

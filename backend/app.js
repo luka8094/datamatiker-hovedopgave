@@ -31,22 +31,13 @@ const s3 = new AWS.S3({region: AWS_REGION})
 import path from "path"
 app.use(express.static(path.resolve("../frontend/obsidian-mindbench/dist")))
 
+
 app.use(express.json({limit: "10mb"}))
 app.use(express.urlencoded({extended: true, limit: "10mb", parameterLimit: 50000}))
-/*
-import * as bodyParser from "body-parser"
 
-app.get("/test", (req, res) => { 
-    res.send({data:"Endpoint connection test status: OK"})
-})
+import cookieParser from "cookie-parser"
+app.use(cookieParser())
 
-import multer from "multer"
-const upload = multer({dest: "./temp"})
-
-app.post("/upload-file", upload.single("file"), async (req, res) => {
-    console.log(req.file)
-    res.send({message: "All A-OK"})
-})
 
 /*
 import fs from "fs"
@@ -62,12 +53,13 @@ madbConnection
 import authRouter from "./routers/accessRouter.js"
 app.use(authRouter)
 
-import {tokenChecker} from "./utils/jwtVerify.js"
+import {tokenChecker} from "./utils/tokenHelper.js"
+import {inputSanitizer} from "./utils/validationHelper.js"
 import filesRouter from "./routers/filesRouter.js"
-app.use(tokenChecker, filesRouter)
+app.use(tokenChecker, inputSanitizer(), filesRouter)
 
 import customModelsRouter from "./routers/modelsRouter.js"
-app.use(tokenChecker, customModelsRouter)
+app.use(tokenChecker, inputSanitizer(), customModelsRouter)
 
 app.listen(PORT, () => console.log("Server running on port: %s", PORT))
 

@@ -1,7 +1,7 @@
 <script>
-    import {temporaryStorage} from "../../stores/sysdll"
+    import {temporaryStorage, workspaceHistory} from "../../stores/sysdll"
     let showOptions = [false, false, false]
-    let datasheet, inputs, outputs
+    let datasheet, storedFilename, inputs, outputs
    
     async function sendFile(){
         const form = new FormData()
@@ -18,6 +18,7 @@
         const {data} = await response.json()
 
         if(response.status === 202){
+            storedFilename = data
             $temporaryStorage.push(data)
             console.log($temporaryStorage)
             showOptions[0] = true
@@ -28,8 +29,19 @@
         console.log("sending model config")
     }
 
-    function getModelFile(){
+    async function getModelFile(){
         console.log("downloading model")
+
+        const response = await fetch("/api/save-file", {
+            method: 'POST',
+            headers: {
+                'Content-type': 'application/json'
+            },
+            body: JSON.stringify({filename: storedFilename})
+        })
+
+        $workspaceHistory.push("new-file")
+        $workspaceHistory = $workspaceHistory
     }
 </script>
 
@@ -61,7 +73,7 @@
         {#if showOptions[2]}
             <div class="option">
                 <h1>4. Download!</h1>
-                <a role="button" tabindex="0" on:click={getModelFile}>Model ready! get the file</a>
+                <a role="button" tabindex="0" on:click={getModelFile} href={undefined}>Model ready! get the file</a>
             </div>
         {/if}
     </div>
