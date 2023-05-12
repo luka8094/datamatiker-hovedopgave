@@ -78,6 +78,7 @@ Anvend Node's terminal til et oprette tilfældigt genereret strenge til SHA256 n
 
 Derudover skal der oprettes en Google Cloud konto og en Webapp projekt. Derfra vil du få bevilling for at kunne redirecte til Google's sign-in prompt samt tilhørende auth credentials. Følge guiden i denne video:
 
+[![Google Oauth2 video]([https://img.youtube.com/vi/VIDEO-ID/0.jpg](https://i.ytimg.com/vi/Qt3KJZ2kQk0/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC2L6_LJGI2k3kovFjxxjEzGCVTqw))](https://youtu.be/Qt3KJZ2kQk0?t=288)
 
 Dernæst opret en konto hos mongodb.com.
 
@@ -87,12 +88,18 @@ Dernæst opret en konto hos mongodb.com.
 ```$ npm run start-dev```
 
 ## . Åben applikationen i en browser
-Hvis de ovenstående instruktioner er blevet fulgt skulle din terminal udskrive følgende
+Hvis de ovenstående instruktioner er blevet fulgt skulle dit terminal vindue fremvise og udskrive følgende beskeder
 ``` 
 Establishing connection. Please wait...
 Success! Connection established.
 Running on post: 3000
 ```
+
+Herefter kan du åbne op for fin fortrukne browser. Når browser er åbnet, indtast ```http://localhost:3000``` browserens addressbar, som vist herunder:
+
+![image](https://github.com/luka8094/datamatiker-hovedopgave/assets/74187002/ded1edb8-b470-40ae-825c-58298ba4adfc)
+
+Din browser videresender dig til applikationens velkomst login skærm.
 
 
 
