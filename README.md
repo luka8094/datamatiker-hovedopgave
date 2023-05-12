@@ -76,11 +76,12 @@ Anvend Node's terminal til et oprette tilfældigt genereret strenge til SHA256 n
 
 ```$ node> require('crypto').randomBytes(64).toString('hex')```
 
-Derudover skal der oprettes en Google Cloud konto og en Webapp projekt. Derfra vil du få bevilling for at kunne redirecte til Google's sign-in prompt samt tilhørende auth credentials. Følge guiden i denne video:
+Derudover skal der oprettes en Google Cloud konto og en Webapp projekt. Derfra vil du få bevilling for at kunne redirecte til Google's sign-in prompt samt tilhørende auth credentials. Følge guiden i denne video. Startpunkt tidsstempel er blevet markeret i videoen:
 
-[![Google Oauth2 video]([https://img.youtube.com/vi/VIDEO-ID/0.jpg](https://i.ytimg.com/vi/Qt3KJZ2kQk0/hq720.jpg?sqp=-oaymwEcCNAFEJQDSFXyq4qpAw4IARUAAIhCGAFwAcABBg==&rs=AOn4CLC2L6_LJGI2k3kovFjxxjEzGCVTqw))](https://youtu.be/Qt3KJZ2kQk0?t=288)
+[![Google Oauth2 video](https://img.youtube.com/vi/Qt3KJZ2kQk0/0.jpg)](https://youtu.be/Qt3KJZ2kQk0?t=292))
 
 Dernæst opret en konto hos mongodb.com.
+
 
 
 ## 5. Indtast følgende terminal kommando for at ekskvere applikationen
