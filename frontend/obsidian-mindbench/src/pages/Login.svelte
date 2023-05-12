@@ -4,23 +4,20 @@
 
     import {onMount, beforeUpdate, afterUpdate, onDestroy} from "svelte"
     import {getCookie} from "svelte-cookie"
-    let email, password, googleLink
+    let email, password, googleLink, errorMessage
 
     const navigate = useNavigate()
     const location = useLocation()
 
     onMount(async () => {
         const oAuth = document.location.hash
+
         if(oAuth === "#0"){ 
-            console.log("#0", getCookie('jwt'))
-            navigate("/_")
+            return navigate("/_")
         }
 
         const response = await fetch("/api/google")
         const {data} = await response.json()
-        const cookie = getCookie('jwt')
-
-        console.log("cookie check:", cookie)
 
         googleLink.href = data
     })
@@ -38,10 +35,9 @@
         })
             
         const {data} = await response.json()
-        console.log(data)
-        $authorized = data
-        
-        if(response.status === 200 && $authorized){
+
+        if(response.status === 200 && data){
+            $authorized = data
             navigate("/_")   
         }
     }

@@ -148,11 +148,11 @@
         z-index: 1;
     }
 
-    #user-history div{
+    #user-history div#workspace-container{
         display: flex;
         flex-direction: column;
         width: 100%;
-        background: rgba(0,0,0,.2);
+        background: #D8D8D8;
         overflow: hidden;
         overflow-y: scroll;
     }
@@ -185,11 +185,13 @@
     }
 
     #workspace-message{
+        width: 300px;
         margin: auto;
-        color: white;
-        font-weight: 600;
-        font-size: 1.5em;
         opacity: .6;
+        font-size: 1.5em;
+        font-weight: 600;
+        color: white;
+        text-align: center;
     }
 
     button .line{

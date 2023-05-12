@@ -40,8 +40,10 @@
             body: JSON.stringify({filename: storedFilename})
         })
 
-        $workspaceHistory.push("new-file")
+        const {data} = await response.json()
+        $workspaceHistory.push(data[0])
         $workspaceHistory = $workspaceHistory
+        console.log($workspaceHistory)
     }
 </script>
 

@@ -10,16 +10,12 @@
             credentials: 'include'
         })
         const {data} = await token.json()
-        console.log("data %s, token %s", data, token.status)
-        console.log(token)
 
         if(data && token.status === 202){
-            $authorized = true
+            $authorized = data
 
-            setTimeout(() => {
-                navigate("/@app")
-                },
-            5000)
+            navigate("/@app")
+      
         }
         else{ 
             navigate("/")

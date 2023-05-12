@@ -17,10 +17,20 @@ const storage = multer.diskStorage(
 )
 const upload = multer({storage: storage})
 
+
+import {spawn} from "child_process"
 filesRouter.post("/api/upload-file", upload.single("file") , async (req, res) => {
-    const {filename} = req.file
+    const filenames = [req.file.originalname, req.file.filename]
+
+    const subProcess = spawn('python', ['./ann/test2.py', JSON.stringify(filenames)])
+
+    subProcess.stdout.on('data', (data) => { 
+        console.log("Subprocess complete: ")
+        console.log(data)
+    })
+
     console.log("filename: %s,\n originalname: %s",req.file.filename, req.file.originalname)
-    res.status(202).send({data: filename})
+    res.status(202).send({data: filenames})
 })
 
 import AWS from "aws-sdk"
@@ -48,7 +58,8 @@ const s3 = new AWS.S3({region: AWS_REGION})
 })()
 */
 filesRouter.post("/api/save-file", (req, res) => {
-
+    console.log(req.body)
+    res.send({data: req.body.filename})
 })
 
 filesRouter.post("/api/download", async (req, res) => {
@@ -78,7 +89,6 @@ filesRouter.post("/api/download", async (req, res) => {
 })
 
 import validator from "validator"
-import {spawn} from "child_process"
 filesRouter.post("/api/predict", async(req, res) => {
     console.log(req.body)
     const {input} = req.body
