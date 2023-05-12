@@ -58,11 +58,6 @@
         </div>    
         <div id="menu-container">
             <button on:click={() => logout()}><img src="/logout.svg" title="logout" alt="logout"/></button>
-            <button on:click={() => console.log("BQ link subpage in development")}><img src="/big_query.svg" title="BigQuery integration" alt="BigQuery integration"></button>
-            <button on:click={() => VIEW = Dataview}><img src="/dataview.svg" title="datasheet view" alt="datasheet view"/></button>
-            <button on:click={() => console.log("Report subpage in development")}><img src="/report.svg" title="get report" alt="get report"></button>
-            <button on:click={() => VIEW = Archive}><img src="/archive.svg" title="files archive" alt="files archive"/></button>
-            <button on:click={() => VIEW = Forecast}><img src="/model_tester.svg" title="model test" alt="model test"/></button>
             <button on:click={() => VIEW = Custom}><img src="/create_model.svg" title="create model" alt="create model"/></button>
             <button on:click={() => VIEW = Splash}><img src="/dashboard.svg" title="dashboard" alt="dashboard"/></button>
         </div>

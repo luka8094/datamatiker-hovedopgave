@@ -3,30 +3,8 @@ import "dotenv/config"
 const app = express()
 const {PORT} = process.env
 
-/*AWS cloud connection test
-import AWS from "aws-sdk"
-const {
-    AWS_A, 
-    AWS_K, 
-    AWS_BUCKET, 
-    AWS_REGION
-} = process.env
-
-AWS.config.update({
-    accessKeyId: AWS_A,
-    secretAccessKey: AWS_K
-})
-
-const s3 = new AWS.S3({region: AWS_REGION})
-
-;(async() => {
-    await s3.putObject({
-        Body: "this is a test",
-        Bucket: AWS_BUCKET,
-        Key: "file-upload-test.txt"
-    }).promise()
-})()
-*/
+import helmet from "helmet"
+app.use(helmet())
 
 import path from "path"
 app.use(express.static(path.resolve("../frontend/obsidian-mindbench/dist")))
@@ -53,13 +31,12 @@ madbConnection
 import authRouter from "./routers/accessRouter.js"
 app.use(authRouter)
 
-import {tokenChecker} from "./utils/tokenHelper.js"
 import {inputSanitizer} from "./utils/validationHelper.js"
 import filesRouter from "./routers/filesRouter.js"
-app.use(tokenChecker, inputSanitizer(), filesRouter)
+app.use(inputSanitizer(), filesRouter)
 
 import customModelsRouter from "./routers/modelsRouter.js"
-app.use(tokenChecker, inputSanitizer(), customModelsRouter)
+app.use(inputSanitizer(), customModelsRouter)
 
 app.listen(PORT, () => console.log("Server running on port: %s", PORT))
 

@@ -3,12 +3,12 @@
     import PathGuard from "../Auth/PathGuard.svelte"
     import Login from "../../pages/Login.svelte"
     import Main from "../../pages/Main.svelte"
-    import Intermediary from "../../pages/Intermediary.svelte"
+    import Boarding from "../../pages/Boarding.svelte"
 </script>
 
 <Router>
     <Route path="/" component={Login}/>
-    <Route path="/_" component={Intermediary}/>
+    <Route path="/_" component={Boarding}/>
     <PathGuard path="/@app">
         <Main/>
     </PathGuard>
