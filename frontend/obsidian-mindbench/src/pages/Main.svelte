@@ -1,18 +1,21 @@
 <script>
-    import {authorized, resizeView, workspaceHistory} from "../stores/sysdll"
+    import {onMount, onDestroy} from "svelte"
+    import {authorized, resizeView, workspaceHistory, temporaryStorage, archiveStorage, bigQuery, user} from "../stores/sysdll"
     import {useNavigate} from "svelte-navigator"
 
     import Dataview from "../components/Dashboard/Dataview.svelte"
+    // @ts-ignore
     import Forecast from "../components/Dashboard/Forecast.svelte"
     import Custom from "../components/Dashboard/Custom.svelte"
     import Splash from "../components/Dashboard/Splash.svelte"
     import Archive from "../components/Dashboard/Archive.svelte"
+    import BigQuery from "../components/Dashboard/BigQuery.svelte"
 
     import HistoryElement from "../components/Dashboard/UserHistory/HistoryElement.svelte"
     
-    let fileHistory, fileHistoryButton
+    let fileHistory, 
+        fileHistoryButton
     let VIEW = Splash
-    const testArray = ["test", "test", "test","test", "test", "test", "test", "test", "test","test", "test", "test"]
 
     const navigate = useNavigate()
 
@@ -25,12 +28,12 @@
             $resizeView = true
             
             Array.from(fileHistory.children).forEach((fileItem, i) => {
-                if(fileItem.tagName == "div") fileItem.style.opacity = ".5;"
+                if(fileItem.tagName == "DIV") fileItem.style.opacity = ".5;"
             })
         }
         else{ 
             Array.from(fileHistory.children).forEach(fileItem => {
-                if(fileItem.tagName == "div") fileItem.style.opacity = "1;"
+                if(fileItem.tagName == "DIV") fileItem.style.opacity = "1;"
             })
             fileHistoryButton.children[0].style.transform = "rotate(0deg)"
 
@@ -38,17 +41,46 @@
             $resizeView = false
         }
     }
+
+    function updateHistoryElements(event){
+        let historyElements = $workspaceHistory
+        historyElements = historyElements.filter(({filename}) => event.detail.value !== filename)
+        
+        $workspaceHistory = historyElements
+        $workspaceHistory = $workspaceHistory
+    }
+
     async function logout(){
         const response = await fetch("/api/logout", {
             method: 'DELETE'
         })
 
-        if(await response.status === 200){
+        if(response.status === 200){
             $workspaceHistory = []
+            $archiveStorage = []
+            $temporaryStorage = []
             $authorized = false
+            $user = null
+            $bigQuery = false
+
             navigate("/")
         }
     }
+
+    onMount(() => {
+        setTimeout(() =>{
+            fileHistoryButton.click()
+            },
+            1500
+        )
+    })
+
+    onDestroy(() => {
+        const userworkFiles = $archiveStorage
+        const filesWorker = new Worker("/scripts/filesWorker.js")
+
+        filesWorker.postMessage(userworkFiles)
+    })
 </script>
 
 <section>
@@ -58,11 +90,17 @@
         </div>    
         <div id="menu-container">
             <button on:click={() => logout()}><img src="/logout.svg" title="logout" alt="logout"/></button>
+            {#if $bigQuery}
+                <button on:click={() => VIEW = BigQuery}><img src="/big_query.svg" title="BigQuery integration" alt="BigQuery integration"></button>
+            {/if}
+            <button on:click={() => VIEW = Dataview}><img src="/dataview.svg" title="datasheet view" alt="datasheet view"/></button>
+            <button on:click={() => VIEW = Archive}><img src="/archive.svg" title="files archive" alt="files archive"/></button>
+            <button on:click={() => VIEW = Forecast}><img src="/model_tester.svg" title="model test" alt="model test"/></button>
             <button on:click={() => VIEW = Custom}><img src="/create_model.svg" title="create model" alt="create model"/></button>
             <button on:click={() => VIEW = Splash}><img src="/dashboard.svg" title="dashboard" alt="dashboard"/></button>
         </div>
     </nav>
-    <div style:class={ $resizeView ? 'reshapeSpace' : ''}>
+    <div style:class="{ $resizeView ? 'reshapeSpace' : ''}">
         <aside bind:this={fileHistory} id="user-history">
             <h1>Workspace shortcuts
                 <button bind:this={fileHistoryButton} on:click={hideFileHistory} title="Show work history">
@@ -73,7 +111,11 @@
             <div id="workspace-container">
                 {#if $workspaceHistory.length !== 0 }
                     {#each $workspaceHistory as item}
-                        <HistoryElement fileName={item}/>
+                        <HistoryElement 
+                        fileName={item.filename}
+                        filetype={item.filetype}
+                        on:removeHistoryElement={updateHistoryElements}
+                        />
                     {/each}
                 {:else }
                     <p id="workspace-message">No recent workfiles</p>
@@ -92,6 +134,10 @@
         width: 100%;
         justify-content: center;
         overflow: hidden;
+    }
+
+    aside{
+        transition: all .5s ease-in-out;
     }
 
     section div{
@@ -116,7 +162,7 @@
         height: 50px;
         width: 50px;
         border-radius: 50px;
-        background: linear-gradient(360deg, #0064e1, white);
+        background: linear-gradient(360deg, var(--obsidian-key-color-one), white);
         margin: auto auto auto 100px;
     }
 
@@ -155,7 +201,7 @@
     #user-history h1{
         display: flex;
         position: absolute;
-        background: linear-gradient(180deg, blue, blue, transparent);
+        background: linear-gradient(180deg, var(--obsidian-key-color-one), var(--obsidian-key-color-one), transparent);
         height: 60px;
         width: 300px;
         color: white;
@@ -236,5 +282,11 @@
 
     button:hover{
         outline: none;
+    }
+
+    @media screen and (max-width: 800px){
+        #logo h2{
+            display: none;
+        }
     }
 </style>

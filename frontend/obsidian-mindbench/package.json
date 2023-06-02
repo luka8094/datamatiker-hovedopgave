@@ -15,6 +15,7 @@
   },
   "dependencies": {
     "svelte-cookie": "^1.0.1",
+    "svelte-loading-spinners": "^0.3.4",
     "svelte-navigator": "^3.2.2"
   }
 }

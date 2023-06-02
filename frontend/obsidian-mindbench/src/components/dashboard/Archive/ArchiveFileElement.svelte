@@ -1,25 +1,33 @@
 <script>
-    export let fileName, tabNumber
+    export let fileName, tabNumber, filetype
     let downloadButton
 
-    async function getFile(){
-        const response = await fetch("/api/download", {
+    async function getFile(event){
+        const filename = event.currentTarget.dataset.file
+
+        const response = await fetch("/api/download:archive", {
             method: 'POST',
             credentials: 'include',
             headers: {
                 'Content-Type':'application/json'
             },
-            body: JSON.stringify({file: fileName})
+            body: JSON.stringify({file: `${filename}.${filetype}`})
         })
 
-        const download = await response.blob()
-        const file = new Blob([download],{type: "applicaiton/x-hdf5"})
-        const url = window.URL.createObjectURL(file)
+        let blobType
 
-        downloadButton.href = url
-        downloadButton.download = fileName+".h5"
+        if(filetype === "csv") blobType = "text/csv"
+        else blobType = "application/x-hdf5"
 
-        downloadButton.removeEventListener('click', getFile)
+        if(response.status === 200){
+            const download = await response.blob()
+            const file = new Blob([download],{type: blobType})
+            const url = window.URL.createObjectURL(file)
+
+            downloadButton.href = url
+            downloadButton.download = `${fileName}.${filetype}`
+        }
+        else return
     }   
 </script>
 
@@ -44,7 +52,7 @@
 
         </div>
     </div>
-    <p>{fileName}.h5</p>
+    <p>{fileName}.{filetype}</p>
 </a>
 
 <style>
@@ -87,11 +95,13 @@
     }
 
     #file-part-two{
-        height: 35px;
-        width: 15px;
-        background: black;
+        height: 29px;
+        width: 18px;
+        background: dimgrey;
         position: relative;
-        left: 65%;
+        left: 57%;
+        border-bottom: solid 1px black;
+        border-left: solid 1px black;
     }
 
     #file-part-three{

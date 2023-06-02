@@ -237,7 +237,7 @@
         display: flex;
         height: 150px;
         width: 150px;
-        background: linear-gradient(180deg, blue, white);;
+        background: linear-gradient(0deg, var(--obsidian-key-color-one), white);;
         margin: auto auto 30px;
         border-radius: 100px;
         align-items: center;

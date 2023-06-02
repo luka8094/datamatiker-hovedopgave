@@ -1,7 +1,7 @@
 import "dotenv/config"
 import {Router} from "express"
 import {validationResult} from "express-validator"
-const authRouter = Router()
+const accessRouter = Router()
 
 const {
     JWT_ACCESS_TOKEN, 
@@ -12,13 +12,20 @@ import User from "../model/user.mjs"
 import bcrypt from "bcrypt"
 import jsonwebtoken from "jsonwebtoken"
 import getGoogleOAuth from "../utils/googleURLtermsHelper.js"
-authRouter.get("/api/google", (req, res) => {
+accessRouter.get("/api/google", (req, res) => {
     res.send({data: getGoogleOAuth()})
 })
 
 import axios from "axios"
 import qs from 'qs'
-authRouter.get("/api/sessions/google/auth", async (req, res) => {
+import GoogleUser from "../model/googleUser.mjs"
+import {
+    encryptGoogleUsername,
+    encryptGoogleUserFiles,
+    decryptGoogleUsername,
+    decryptGoogleUserFiles
+} from "../utils/sha256Helper.js"
+accessRouter.get("/api/sessions/google/auth", async (req, res) => {
     const {code} = req.query
     const URL = "https://oauth2.googleapis.com/token"
 
@@ -40,10 +47,7 @@ authRouter.get("/api/sessions/google/auth", async (req, res) => {
                 } 
             }
         )
-
         const {id_token, access_token} = tokensResponse.data
-
-        const googleUser = jsonwebtoken.decode(id_token)
 
         const userResponse = await axios.get(`https://www.googleapis.com/oauth2/v1/userinfo?alt=json&access_token=${access_token}`,
                 {headers: {
@@ -51,11 +55,42 @@ authRouter.get("/api/sessions/google/auth", async (req, res) => {
                 }
             }
         )
+        const {data} = userResponse
 
-        console.log(userResponse)
-        const accessToken = jsonwebtoken.sign({at: access_token},JWT_ACCESS_TOKEN)
-        
-        res.cookie('jwt', accessToken, {maxAge: 5 * 60 * 1000, httpOnly: true})
+        Object.keys(tokensResponse).forEach(key => delete tokensResponse[key])
+
+        const checkUser = await GoogleUser.findOne({email: data.email})
+        const tokenData =  {}
+
+        if(!checkUser){
+            const newGoogleUser = new GoogleUser({
+                username: encryptGoogleUsername(data.name),
+                email: data.email,
+                settings: {
+                    files: encryptGoogleUserFiles(JSON.stringify([]))
+                }
+            })
+            
+            const registerGoogleUser = await newGoogleUser.save()
+
+            if(registerGoogleUser){ 
+                const {_id} = registerGoogleUser
+                tokenData._id = _id
+            }
+
+            Object.keys(registerGoogleUser).forEach(key => delete registerGoogleUser[key])
+        }else{ 
+            tokenData._id = checkUser._id    
+
+            Object.keys(checkUser).forEach(key => delete checkUser[key])
+        }
+
+        Object.keys(data).forEach(key => delete data[key])
+
+        const accessToken = jsonwebtoken.sign({_id: tokenData._id, google_id: true},JWT_ACCESS_TOKEN)
+        delete tokenData._id
+
+        res.cookie('jwt', accessToken, {maxAge: 20 * 60 * 1000, httpOnly: true})
         res.redirect("/#0")
     }catch(error){
         console.error(error.message)
@@ -63,43 +98,54 @@ authRouter.get("/api/sessions/google/auth", async (req, res) => {
 })
 
 import {loginSanitizer} from "../utils/validationHelper.js"
-authRouter.post("/api/login", loginSanitizer(), async (req, res) => {
+accessRouter.post("/api/login", loginSanitizer(), async (req, res) => {
     const errors = validationResult(req)
-    const{email, password} = req.body
-
+    
     if(!errors.isEmpty()) return res.status(403).send({data: "invalid credentials"})
-    
-    const result = await User.findOne({email: email}).select('password')
-
-
-    if(!await bcrypt.compare(password, result.password)) return res.status(403).send({data: "invalid email or password"})
+    const{email, password} = req.body
     delete req.body
-
-    const token = jsonwebtoken.sign({_id: result._id}, JWT_ACCESS_TOKEN)
-    delete result._id
-    delete result.password
     
-    res.cookie('jwt', token, {httpOnly: true, maxAge: 6 * 60 * 1000})
-    res.send({data:true})
+    const result = await User.findOne({email: email})
+
+    if(!await bcrypt.compare(password, result.password)) return res.status(403).send({data: "invalid credentials"})
+    
+    const token = jsonwebtoken.sign({_id: result._id, google_id: false}, JWT_ACCESS_TOKEN)
+    
+    Object.keys(result).forEach(key => delete result[key])
+    
+    res.cookie('jwt', token, {httpOnly: true, maxAge: 20 * 60 * 1000})
+    res.status(200).send({data: true})
 })
 
-authRouter.post("/api/user", (req, res) => {
-    if(typeof req.cookies['jwt'] !== 'string') return res.send({data: false})
-    const jwt = req.cookies['jwt']
+import {
+    decryptUsername, 
+    decryptFiles
+} from "../utils/sha256Helper.js"
+import tokenChecker from "../utils/tokenHelper.js"
+accessRouter.post("/api/user", tokenChecker, async (req, res) => {
+    const {claims} = req.body
+    delete req.body.claims
 
-    const claims = jsonwebtoken.verify(jwt, JWT_ACCESS_TOKEN, (error, data) => {
-            if(error) return false
-            else return data
-        }
-    )
+    const googleAccess = claims.google_id
 
-    if(!claims) return res.send({data: false})
-    else res.status(202).send({data: true})
+    const userdata = {}
+    const result = googleAccess ? await GoogleUser.findOne({_id: claims._id}) : await User.findOne({_id: claims._id})
+
+    userdata.username = googleAccess ? decryptGoogleUsername(result.username) : decryptUsername(result.username)
+    userdata.files = googleAccess ? decryptGoogleUserFiles(result.settings.files) : decryptFiles(result.settings.files)
+
+    Object.keys(result).forEach(key => delete result[key])
+
+    res.status(202).send({data: {authorized: true, bigquery: googleAccess, user: {userdata: userdata}}})
 })
 
-authRouter.delete("/api/logout", (req, res) => {
+import clearTemp from "../utils/tempHelper.js"
+accessRouter.delete("/api/logout", (req, res) => {
     res.cookie('jwt',{maxAge: 0})
+
+    clearTemp()
+
     res.sendStatus(200)
 })
 
-export default authRouter
+export default accessRouter

@@ -1,5 +1,5 @@
 <script>
-    import {authorized} from "../stores/sysdll"
+    import {authorized, user, bigQuery} from "../stores/sysdll"
     import {useNavigate} from "svelte-navigator"
 
     const navigate = useNavigate()
@@ -11,11 +11,12 @@
         })
         const {data} = await token.json()
 
-        if(data && token.status === 202){
-            $authorized = data
+        if(data.authorized && token.status === 202){
+            $authorized = data.authorized
+            $bigQuery = data.bigquery
+            $user = data.user.userdata
 
             navigate("/@app")
-      
         }
         else{ 
             navigate("/")

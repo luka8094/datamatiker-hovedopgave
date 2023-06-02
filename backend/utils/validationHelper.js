@@ -1,6 +1,6 @@
-import {body} from "express-validator"
+import {body, query} from "express-validator"
 
-export function loginSanitizer (){
+export function loginSanitizer(){
     return [
         body('email')
         .trim()
@@ -18,12 +18,44 @@ export function loginSanitizer (){
     ]
 }
 
-export function inputSanitizer(){   
+export function uploadSanitizer(){   
     return [
-        body('input')
+        body('name')
         .trim()
         .escape()
-        .bail()
         .notEmpty()
+        .bail(),
+        body('claims')
+        .notEmpty(),
+        query('option')
+        .trim()
+        .escape()
+        .notEmpty()
+        .bail()
+    ]
+}
+
+export function fileAccessSanitizer(){
+    return [
+        body('file')
+        .trim()
+        .escape()
+        .notEmpty()
+        .bail(),
+        query('option')
+        .trim()
+        .escape()
+        .notEmpty()
+        .bail()
+    ]
+}
+
+export function configSanitizer(){
+    return [
+        body('options')
+        .trim()
+        .notEmpty()
+        .escape()
+        .bail()
     ]
 }

@@ -2,12 +2,19 @@
     import {resizeView} from "../../stores/sysdll"
 
     import DNNtemplate from "../Custom/DNNtemplate.svelte"
+    // @ts-ignore
     import RNNtemplate from "../Custom/RNNtemplate.svelte"
-    let dnnOptionSlide, rnnOptionSlide, dnnDescription, rnnDescription
+    import SOMtemplate from "../Custom/SOMtemplate.svelte"
+    
+    let dnnOptionSlide, 
+        rnnOptionSlide,
+        somOptionSlide, 
+        dnnDescription, 
+        rnnDescription,
+        somDescription
 
     function selectTemplate(e){
         const option = e.currentTarget.dataset.option
-        console.log(option)
 
         if(option === 'rnn'){
             const position = rnnOptionSlide.style.left
@@ -20,7 +27,7 @@
             const position = dnnOptionSlide.style.left
 
             if(position != "0px"){ 
-                rnnOptionSlide.style.left = "-1400px"
+                rnnOptionSlide.style.left = "-1600px"
                 dnnOptionSlide.style.left = "0px"
             }
             else{
@@ -29,31 +36,48 @@
             }
         }
 
-        /*
-        else rnnOptionSlide.style.left = "-250px"
-        if(option === 'dnn' && dnnOptionSlide.style.left == "-300px") dnnOptionSlide.style.left = "700px"
-        else dnnOptionSlide.style.left = "-300px"*/
+        if(option === "som"){
+            const position = somOptionSlide.style.left
+            
+            if(position != "0px"){
+                somOptionSlide.style.left = "0px"
+                rnnOptionSlide.style.left = "-1700px"
+                dnnOptionSlide.style.left = "-1600px"
+            }else{
+                somOptionSlide.style.left = $resizeView ? "-1150px" : "-880px"
+                rnnOptionSlide.style.left = $resizeView ? "-1350px" : "-1100px"
+                dnnOptionSlide.style.left = $resizeView ? "-1250px" : "-990px"
+            }
+            
+        }
     }
 
     function showDescription(e){
-        console.log(e.currentTarget.id)
         const target = e.currentTarget.id
 
-        if(target === "dnn-option"){
-            dnnDescription.style.opacity = "1"
-        } 
-        if(target === "rnn-option"){
-            rnnDescription.style.opacity = "1"
-        }
+        if(target === "dnn-option") dnnDescription.style.opacity = "1"
+        if(target === "rnn-option") rnnDescription.style.opacity = "1"
+        if(target === "som-option") somDescription.style.opacity = "1"
     }
 
     function hideDescription(){
         dnnDescription.style.opacity = "0"
         rnnDescription.style.opacity = "0"
+        somDescription.style.opacity = "0"
     }
-</script>
+    </script>
 
-<div id="custom" style="{ $resizeView ? "margin-left: 0px;" : "margin-left: 300px;"}">
+<div id="custom" class:changeView={$resizeView !== true}>
+    <div bind:this={somOptionSlide} id="som-option" style="{$resizeView ? "left: -1150px;" : "left: -880px;"}"
+    on:mouseenter={showDescription}
+    on:mouseleave={hideDescription}>
+        <SOMtemplate/>
+        <button data-option="som" on:click|preventDefault={selectTemplate}>
+            <span>
+                SOM
+            </span>
+        </button>
+    </div>
     <div bind:this={dnnOptionSlide} id="dnn-option" style="{ $resizeView ? "left: -1250px;" : "left: -990px;"}" 
     on:mouseenter={showDescription}
     on:mouseleave={hideDescription}>
@@ -78,14 +102,25 @@
     <p>Select a work template</p>
     <article id="description">
         <div bind:this={dnnDescription} id="dnn-description">
-            <h1>Deep neural network</h1> 
-            <p>Basic neural network in Machine Learning.</p>
+            <h1>Deep<br>Neural<br>Network</h1>
+            <h3>Type: supervised learning</h3>
+            <p>Basic deep learning neural network.</p>
+            <p>Neurons per hidden layer and amount of iterations &#40;epochs&#41; are statically preset.</p>
         </div>
         <div bind:this={rnnDescription} id="rnn-description">
-            <h1>Recurrent neural network</h1> 
-            <p>Advanced neural network in Machine Learning.</p>
-            <p>Enchanced version with Long Short Term Memory.</p>
-            <p>Beneficial for time series forecasting.</p>
+            <h1>Recurrent<br>Neural<br>Network</h1>
+            <h2>&#40;LSTM enhanced&#41;</h2>
+            <h3>Type: supervised learning</h3>
+            <p>Advanced neural network in Machine Learning. 
+                Enchanced version with Long Short Term Memory &#40;LSTM&#41; supported layers.
+                Advantageous for time series forecasting.</p>
+            <p>This template is recommended for deducing and deriving analysis from long sequence datasets, for example stock prices.</p>
+        </div>
+        <div bind:this={somDescription} id="som-description">
+            <h1>Self<br>Organizing<br>Map</h1>
+            <h3>Type: unsupervised learning</h3>
+            <p>Cluster based neural network. Useful for feature detection.</p>
+            <p>The template develops a data visual image pattern from unlabeled data.</p>
         </div>
     </article>
 </div>
@@ -100,8 +135,13 @@
         align-items: center;
         background: white;
         overflow: hidden;
-        margin-left: 0 ;
+        margin-left: 0px;
         z-index: 0;
+        transition: margin .5s ease-in-out;
+    }
+
+    #custom.changeView{
+        margin-left: 300px !important;
     }
 
     h1{
@@ -116,7 +156,9 @@
         z-index: -10;
     }
 
-    #dnn-option, #rnn-option{
+    #dnn-option, 
+    #rnn-option, 
+    #som-option{
         position: relative;
         transition: all .5s ease-in-out;
     }
@@ -166,12 +208,25 @@
         left: -990px;
     }
 
+    #som-option{
+        display: flex;
+        position: absolute;
+        height: 100vh;
+        width: 100%;
+        background: white;
+        z-index: -3;
+        left: -890px;
+    }
+
     #description{
+        width: 300px;
         margin-right: 10px;
+        text-align: left;
     }
 
     #dnn-description,
-    #rnn-description{
+    #rnn-description,
+    #som-description{
         display: flex;
         flex-direction: column;
         position: absolute;
@@ -181,9 +236,28 @@
         color: black;
     }
 
-    #dnn-description > h1,
-    #rnn-description > h1{
+    #dnn-description h1,
+    #rnn-description h2,
+    #som-description h1{
         margin-bottom: 10px;
+    }
+
+    #dnn-description h3,
+    #rnn-description h3,
+    #som-description h3{
+        margin: 1px 0;
+        font-weight: bold;
+    }
+
+    #dnn-description > *,
+    #rnn-description > *,
+    #som-description > *{
+        text-align: left;
+    }
+
+    #rnn-description p:nth-child(5),
+    #som-description p:nth-child(4){
+        margin-top: 10px;
     }
 
     #dnn-description{
@@ -192,6 +266,10 @@
 
     #dnn-description{
         z-index: 2;
+    }
+    
+    #som-description{
+        z-index: 3;
     }
 
     article{

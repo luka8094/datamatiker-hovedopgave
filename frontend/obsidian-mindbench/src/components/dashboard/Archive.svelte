@@ -1,17 +1,18 @@
 <script>
-    import {resizeView} from "../../stores/sysdll";
+    import {resizeView, archiveStorage} from "../../stores/sysdll";
     import ArchiveFileElement from "./Archive/ArchiveFileElement.svelte"
 
-    const userFiles = ["filename1", "filename2", "model", "model2","model3", "anotherFile", "MyRNN","filename1", "filename2", "model", "model2","model3", "anotherFile", "MyRNN"]
+    $: userFiles = $archiveStorage
 </script>
 
 <section style="{ $resizeView ? "padding-left: 0px;" : "padding-left: 300px"}">
     <h1>File storage</h1>
     <div id="files-overview">
-        {#each userFiles as fn, i}
+        {#each userFiles as file, position}
             <ArchiveFileElement 
-                fileName={fn} 
-                tabNumber={i}
+                fileName={file.filename}
+                filetype={file.filetype} 
+                tabNumber={position}
             />
         {/each}
     </div>
