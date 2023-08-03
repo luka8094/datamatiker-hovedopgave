@@ -98,7 +98,7 @@ Success! Connection established.
 Running on post: 3000
 ```
 
-Hvis den ovenstående besked vises, kan du nu starte op for din fortrukne browser. Når browservinduet er åbnet og klar, indtast ```http://localhost:3000``` browserens addressefelt, som vist herunder:
+Hvis den ovenstående besked vises, kan du nu starte op for din fortrukne browser. Når browservinduet er åbnet og klar, indtast ```http://localhost:3000``` i browserens addressefelt, som vist herunder:
 
 ![image](https://github.com/luka8094/datamatiker-hovedopgave/assets/74187002/ded1edb8-b470-40ae-825c-58298ba4adfc)
 
